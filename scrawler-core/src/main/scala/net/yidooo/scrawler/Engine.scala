@@ -26,7 +26,7 @@ class Engine(config: ScrawlerConfig, requestMiddleware: RequestMiddleware)
       }
 
     case CrawlResponseEvent(response) =>
-      val page = Page(response.rawText, response.url)
+      val page = Page(response.httpResponse.body, response.url)
       pageProcessorRouter ! HandlePageEvent(page)
 
     case HandleItemEvent(item) =>

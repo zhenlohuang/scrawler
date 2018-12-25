@@ -1,13 +1,14 @@
 package net.yidooo.scrawler.model
 
-case class CrawlRequest(url: String,
-                        headers: Map[String, String] = Map.empty,
-                        cookies: Map[String, String] = Map.empty,
-                        charset: String = "utf-8",
-                        skip: Boolean = false)
+import net.yidooo.scrawler.http.HttpRequest
+
+case class CrawlRequest(httpRequest: HttpRequest,
+                        skip: Boolean = false) {
+  val url = httpRequest.url
+}
 
 object CrawlRequest {
   def of(url: String): CrawlRequest = {
-    CrawlRequest(url)
+    CrawlRequest(HttpRequest(url))
   }
 }

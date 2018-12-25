@@ -27,7 +27,7 @@ class ApacheHttpClient(config: HttpClientConfig) extends HttpClient {
 
       // set cookies
       val cookieStore = new BasicCookieStore()
-      request.cookies.foreach(cookie => {
+      (config.defaultCookies ++ request.cookies).foreach(cookie => {
         val clientCookie = new BasicClientCookie(cookie._1, cookie._2)
         clientCookie.setDomain(config.domain)
         cookieStore.addCookie(clientCookie)

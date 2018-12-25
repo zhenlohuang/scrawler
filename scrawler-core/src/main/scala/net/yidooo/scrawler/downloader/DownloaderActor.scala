@@ -16,11 +16,8 @@ class DownloaderActor(config: DownloaderConfig) extends Downloader with Actor wi
     var retries = 0
     do {
       try {
-        val httpRequest = HttpRequest(request.url, request.headers, request.cookies, request.charset)
-        val httpResponse = httpClient.doGet(httpRequest)
-
-        val downloadStatus = httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
-        return CrawlResponse(request, httpResponse.body, downloadStatus, httpResponse.statusCode)
+        val httpResponse = httpClient.doGet(request.httpRequest)
+        return CrawlResponse(request, httpResponse)
       } catch {
         case ex: Exception =>
           log.warning(s"Failed to download ${request.url} with exception: ${ex.getMessage}")

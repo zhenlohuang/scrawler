@@ -10,7 +10,7 @@ object IteyeBlogCrawler extends App {
     val spider = Spider.builder()
       .modules(new IteyeModule())
       .requestMiddleware(new DedupMiddleware())
-      .initRequest(new CrawlRequest("http://www.iteye.com/blogs"))
+      .initRequest(CrawlRequest.of("http://www.iteye.com/blogs"))
       .build()
 
     spider.run()
