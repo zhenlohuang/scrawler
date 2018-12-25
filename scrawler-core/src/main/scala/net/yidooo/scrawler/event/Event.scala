@@ -1,9 +1,8 @@
 package net.yidooo.scrawler.event
 
-import net.yidooo.scrawler.model.{Item, Page, Request, Response}
+import net.yidooo.scrawler.model.{Item, Page, CrawlRequest, CrawlResponse}
 
-final case class CrawlRequestEvent(request: Request)
-final case class CrawlResponseEvent(response: Response)
+final case class CrawlRequestEvent(request: CrawlRequest)
+final case class CrawlResponseEvent(response: CrawlResponse)
 final case class HandleItemEvent(item: Item)
-final case class FetchTaskEvent()
 final case class HandlePageEvent(page: Page)

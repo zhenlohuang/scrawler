@@ -1,13 +1,13 @@
 package net.yidooo.scrawler.middleware
 
-import net.yidooo.scrawler.model.{Request, Response}
+import net.yidooo.scrawler.model.{CrawlRequest, CrawlResponse}
 
 trait RequestMiddleware {
-  def processRequest(request: Request): Request
+  def processRequest(request: CrawlRequest): CrawlRequest
 }
 
 trait ResponseMiddleware {
-  def processResponse(response: Response): Request
+  def processResponse(response: CrawlResponse): CrawlRequest
 }
 
 

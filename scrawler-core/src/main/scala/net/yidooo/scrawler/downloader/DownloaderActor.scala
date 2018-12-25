@@ -1,41 +1,26 @@
 package net.yidooo.scrawler.downloader
 
-import java.net.HttpCookie
-
 import akka.actor.{Actor, ActorLogging, Props, UnhandledMessage}
 import net.yidooo.scrawler.DownloaderConfig
 import net.yidooo.scrawler.event.{CrawlRequestEvent, CrawlResponseEvent}
-import net.yidooo.scrawler.model.{Request, Response}
-import scalaj.http.{Http, HttpOptions}
+import net.yidooo.scrawler.http.{HttpClient, HttpRequest}
+import net.yidooo.scrawler.http.impl.ApacheHttpClient
+import net.yidooo.scrawler.model.{CrawlRequest, CrawlResponse}
 
 class DownloaderActor(config: DownloaderConfig) extends Downloader with Actor with ActorLogging {
-  override def download(request: Request): Response = {
+  override def download(request: CrawlRequest): CrawlResponse = {
     log.debug(s"Downloading ${request.url}")
 
-    var http = Http(request.url)
-      .headers(request.headers)
-      .cookies(request.cookies.map({case (key, value) => new HttpCookie(key, value)}).toSeq)
-      .timeout(config.connectionTimeout, config.readTimeout)
-      .option(HttpOptions.followRedirects(true))
-      .option(HttpOptions.allowUnsafeSSL)
-
-    if(config.enableProxy()) {
-      http = http.proxy(config.getProxy())
-      if(config.hasProxyAuth()) {
-        http = http.proxyAuth(config.proxyUser, config.proxyPassword)
-      }
-    }
+    val httpClient: HttpClient = new ApacheHttpClient(config.httpClientConfig)
 
     var retries = 0
     do {
       try {
-        val response = http.asString
+        val httpRequest = HttpRequest(request.url, request.headers, request.cookies, request.charset)
+        val httpResponse = httpClient.doGet(httpRequest)
 
-        val content = response.body
-        val headers = response.headers
-        val downloadStatus = response.code >= 200 && response.code < 300
-
-        return Response(request, content, headers, downloadStatus, response.code)
+        val downloadStatus = httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
+        return CrawlResponse(request, httpResponse.body, downloadStatus, httpResponse.statusCode)
       } catch {
         case ex: Exception =>
           log.warning(s"Failed to download ${request.url} with exception: ${ex.getMessage}")

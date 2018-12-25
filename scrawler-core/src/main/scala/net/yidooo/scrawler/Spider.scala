@@ -4,11 +4,11 @@ import akka.actor.ActorSystem
 import com.typesafe.scalalogging.LazyLogging
 import net.yidooo.scrawler.event.CrawlRequestEvent
 import net.yidooo.scrawler.middleware.{DummyMiddleware, RequestMiddleware}
-import net.yidooo.scrawler.model.Request
+import net.yidooo.scrawler.model.CrawlRequest
 
 import scala.collection.mutable.ArrayBuffer
 
-class Spider(config: ScrawlerConfig, requestMiddleware: RequestMiddleware, initRequests: Seq[Request])
+class Spider(config: ScrawlerConfig, requestMiddleware: RequestMiddleware, initRequests: Seq[CrawlRequest])
   extends LazyLogging {
   private val engine = Spider.system.actorOf(Engine.props(config, requestMiddleware), Engine.ACTOR_NAME)
 
@@ -26,7 +26,7 @@ object Spider {
 
   class Builder {
     private var requestMiddleware: RequestMiddleware = new DummyMiddleware()
-    private var initRequests = new ArrayBuffer[Request]()
+    private var initRequests = new ArrayBuffer[CrawlRequest]()
     private var configFile = ScrawlerConfig.DEFAULT_USER_CONFIG_FILE
 
     def modules(module: ScrawlerModule): Builder = {
@@ -39,23 +39,23 @@ object Spider {
       this
     }
 
-    def initRequest(request: Request): Builder = {
+    def initRequest(request: CrawlRequest): Builder = {
       this.initRequests += request
       this
     }
 
-    def initRequests(requests: Seq[Request]): Builder = {
+    def initRequests(requests: Seq[CrawlRequest]): Builder = {
       this.initRequests ++= requests
       this
     }
 
     def initUrls(urls: Seq[String]): Builder = {
-      this.initRequests ++= urls.map(Request.of)
+      this.initRequests ++= urls.map(CrawlRequest.of)
       this
     }
 
     def initUrl(url: String): Builder = {
-      this.initRequests += Request.of(url)
+      this.initRequests += CrawlRequest.of(url)
       this
     }
 

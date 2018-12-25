@@ -1,8 +1,8 @@
 package net.yidooo.scrawler.downloader
 
-import net.yidooo.scrawler.model.Response
-import net.yidooo.scrawler.model.Request
+import net.yidooo.scrawler.model.CrawlResponse
+import net.yidooo.scrawler.model.CrawlRequest
 
 trait Downloader {
-  def download(request: Request): Response
+  def download(request: CrawlRequest): CrawlResponse
 }

@@ -20,7 +20,7 @@ lazy val core = (project in file("scrawler-core"))
 
     libraryDependencies += scalaLogging,
     libraryDependencies += akkaActor,
-    libraryDependencies += scalajHttp,
+    libraryDependencies += httpClient,
     libraryDependencies += jsoup,
     libraryDependencies += typesafeConfig,
     libraryDependencies += macwire,

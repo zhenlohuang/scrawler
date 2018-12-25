@@ -1,6 +1,6 @@
 package net.yidooo.scrawler.example.iteye
 
-import net.yidooo.scrawler.model.{Item, Page, Request}
+import net.yidooo.scrawler.model.{Item, Page, CrawlRequest}
 import net.yidooo.scrawler.processor.PageProcessor
 
 class IteyePageProcessor extends PageProcessor {
@@ -19,9 +19,9 @@ class IteyePageProcessor extends PageProcessor {
         page.html.body.links.foreach {
           case link@(BLOG_URL_PATTERN(_*) | PAGE_URL_PATTERN(_*)) =>
             if(link.startsWith("http")) {
-              addRequest(Request.of(link))
+              addRequest(CrawlRequest.of(link))
             } else {
-              addRequest(Request.of(DOMAIN + link))
+              addRequest(CrawlRequest.of(DOMAIN + link))
             }
           case _ =>
         }
